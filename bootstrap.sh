@@ -16,7 +16,7 @@ case $1 in
     nginx)
         if [ -f /etc/nginx/conf.d/status.conf ]
         then
-        echo "status.conf file exist"
+        echo "/etc/nginx/conf.d/status.conf file exist"
         else 
         cat nginx/status.conf >>/etc/nginx/conf.d/status.conf
         fi
@@ -28,7 +28,7 @@ case $1 in
     apache)
         if [ -f /etc/$APACHE/conf.modules.d/status.conf ]
         then
-        echo "status.conf file exist"
+        echo "/etc/$APACHE/conf.modules.d/status.conf file exist"
         else
         cat apache/status.conf>>/etc/$APACHE/conf.modules.d/status.conf
         fi
