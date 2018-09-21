@@ -43,11 +43,11 @@ esac
 for i in "$@"
 do
 case $i in
-    -a *|--agent=*)
+    -a=*|--agent=*)
         API_KEY="${i#*=}"
         DD_API_KEY=$API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
     ;;
-    -i *|--integration=*)
+    -i=*|--integration=*)
         integration="${i#*=}"
         Integration $integration
     ;;
