@@ -9,7 +9,7 @@ AGENT_TYPE=$1
 Integration() {
 case $1 in
      nginx)
-          echo "
+echo "
   server {
   listen 81;
   server_name localhost;
@@ -31,6 +31,7 @@ case $1 in
     # status;
   }
 }">>/etc/nginx/conf.d/status.conf
+
 echo "init_config:
 
 instances:
@@ -40,7 +41,7 @@ instances:
   systemctl restart datadog-agent
           ;;
      apache)
-    echo "<IfModule mod_status.c>
+echo "<IfModule mod_status.c>
     <Location /server-status>
         SetHandler server-status
         <RequireAny>
@@ -49,7 +50,7 @@ instances:
     </Location>
     ExtendedStatus On
 </IfModule>">>/etc/httpd/conf.modules.d/status.conf
-    echo "
+echo "
 init_config:
 
 instances:
@@ -72,12 +73,6 @@ DD_API_KEY=$API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog
     -i=*|--integration=*)
     integration="${i#*=}"
     Integration $integration
-    ;;
-    -l=*|--lib=*)
-    DIR="${i#*=}"
-    ;;
-    --default)
-    DEFAULT=YES
     ;;
     *)
     echo "Dont have this key"
