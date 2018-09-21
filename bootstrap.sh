@@ -41,6 +41,8 @@ case $i in
         integration="${i#*=}"
         Integration $integration
     ;;
+    -u|--upgrade)
+        DD_UPGRADE=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
     *)
         echo "Dont have this key"
     ;;
