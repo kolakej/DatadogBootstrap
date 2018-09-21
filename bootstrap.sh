@@ -3,8 +3,9 @@ set -e
 DATADOG_HOME="/etc/datadog-agent"
 DATADOG_CONF_FILE=CONF="$DATADOG_HOME/datadog.yaml"
 DATADOG_CONF_DIR="$DATADOG_HOME/conf.d/"
-OS=$(cat /etc/*-release | grep ^ID= | awk -F = '{print $2}')
-if [ $OS = \"centos\" ]
+KNOWN_DISTRIBUTION="(Debian|Ubuntu|RedHat|CentOS|openSUSE|Amazon|Arista|SUSE)"
+DISTRIBUTION=$(lsb_release -d 2>/dev/null | grep -Eo $KNOWN_DISTRIBUTION  || grep -Eo $KNOWN_DISTRIBUTION /etc/issue 2>/dev/null || grep -Eo $KNOWN_DISTRIBUTION /etc/Eos-release 2>/dev/null || grep -m1 -Eo $KNOWN_DISTRIBUTION /etc/os-release 2>/dev/null || uname -s)
+if [ $DISTRIBUTION = CentOS ] || [ $DISTRIBUTION = RedHat ]
 then
 APACHE="httpd"
 else
@@ -40,6 +41,7 @@ case $1 in
 esac
 }
 
+
 for i in "$@"
 do
 case $i in
@@ -52,6 +54,8 @@ case $i in
         Integration $integration
     ;;
     -u|--upgrade)
+        VERSION=$(datadog-agent version | awk '{print $2}')
+        LATEST_VERSION=
         DD_UPGRADE=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
     ;;
     *)
