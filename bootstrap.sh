@@ -12,7 +12,7 @@ else
 APACHE="apache2"
 fi
 
-Integration() {
+function Integration() {
 case $1 in
     nginx)
         if [ -f /etc/nginx/conf.d/status.conf ]
