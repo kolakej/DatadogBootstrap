@@ -40,6 +40,7 @@ case $1 in
     ;;
 esac
 }
+function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
 
 for i in "$@"
@@ -55,8 +56,12 @@ case $i in
     ;;
     -u|--upgrade)
         VERSION=$(datadog-agent version | awk '{print $2}')
-        LATEST_VERSION=
+        LATEST_VERSION=$(cat version)
+        if version_gt $LATEST_VERSION $VERSION; then
         DD_UPGRADE=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+        else
+        echo "Agent have latest version"
+        fi
     ;;
     *)
         echo "Dont have this key"
