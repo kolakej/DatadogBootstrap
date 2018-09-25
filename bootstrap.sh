@@ -57,14 +57,14 @@ case $i in
 	        integration="${i#*=}"
             Integration $integration
         else
-	        echo "Dont have a agent /nPlease use key -a=[Enter you API key here] or  to install agent"
+	        echo "Dont have a agent Please use key -a=[Enter you API key here] or  to install agent"
         fi
     ;;
     -u|--upgrade)
         if [ -d /etc/datadog-agent ] 
             then
 	        VERSION=$(datadog-agent version | awk '{print $2}')
-            LATEST_VERSION=$(cat version)
+            LATEST_VERSION=$(curl -L https://storage.googleapis.com/datadogbotsrap/bootstrap/version)
                 if version_gt $LATEST_VERSION $VERSION; then
                     DD_UPGRADE=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
                 else
