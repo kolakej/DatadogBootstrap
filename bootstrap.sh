@@ -5,6 +5,7 @@ DATADOG_CONF_FILE=CONF="$DATADOG_HOME/datadog.yaml"
 DATADOG_CONF_DIR="$DATADOG_HOME/conf.d/"
 KNOWN_DISTRIBUTION="(Debian|Ubuntu|RedHat|CentOS|openSUSE|Amazon|Arista|SUSE)"
 DISTRIBUTION=$(lsb_release -d 2>/dev/null | grep -Eo $KNOWN_DISTRIBUTION  || grep -Eo $KNOWN_DISTRIBUTION /etc/issue 2>/dev/null || grep -Eo $KNOWN_DISTRIBUTION /etc/Eos-release 2>/dev/null || grep -m1 -Eo $KNOWN_DISTRIBUTION /etc/os-release 2>/dev/null || uname -s)
+WORK_DIR=$(pwd)
 if [ $DISTRIBUTION = CentOS ] || [ $DISTRIBUTION = RedHat ]
 then
 APACHE="httpd"
@@ -19,9 +20,9 @@ case $1 in
         then
         echo "/etc/nginx/conf.d/status.conf file exist"
         else 
-        cat nginx/status.conf >>/etc/nginx/conf.d/status.conf
+        cat $WORK_DIR/integration/nginx/status.conf >>/etc/nginx/conf.d/status.conf
         fi
-        cat nginx/conf.yaml>>$DATADOG_CONF_DIR/nginx.d/conf.yaml
+        cat $WORK_DIR/integration/nginx/conf.yaml>>$DATADOG_CONF_DIR/nginx.d/conf.yaml
         chown dd-agent:dd-agent $DATADOG_CONF_DIR/nginx.d/conf.yaml
         systemctl restart nginx
         systemctl restart datadog-agent
@@ -31,9 +32,9 @@ case $1 in
         then
         echo "/etc/$APACHE/conf.modules.d/status.conf file exist"
         else
-        cat apache/status.conf>>/etc/$APACHE/conf.modules.d/status.conf
+        cat $WORK_DIR/integration/apache/status.conf>>/etc/$APACHE/conf.modules.d/status.conf
         fi
-        cat apache/conf.yaml>>$DATADOG_CONF_DIR/apache.d/conf.yaml
+        cat $WORK_DIR/integration/apache/conf.yaml>>$DATADOG_CONF_DIR/apache.d/conf.yaml
         chown dd-agent:dd-agent $DATADOG_CONF_DIR/apache.d/conf.yaml
         systemctl restart $APACHE
         systemctl restart datadog-agent
@@ -56,11 +57,10 @@ case $i in
 	        integration="${i#*=}"
             Integration $integration
         else
-	        echo "dont have a agent please use key -a=[Enter you API key here] to install agent"
+	        echo "Dont have a agent /nPlease use key -a=[Enter you API key here] or  to install agent"
         fi
     ;;
     -u|--upgrade)
-        #!/bin/bash
         if [ -d /etc/datadog-agent ] 
             then
 	        VERSION=$(datadog-agent version | awk '{print $2}')
@@ -71,9 +71,13 @@ case $i in
                     echo "Agent have latest version"
                  fi
             else
-	        echo "dont have a agent please use key -a=[Enter you api key here] to install agent"
+	        echo "Dont have a agent /nPlease use key -a=[Enter you api key here] to install agent"
         fi
 
+    ;;
+    -l) 
+        echo "Integration list include:"
+        ls -1 $WORK_DIR/integration
     ;;
     *)
         echo "Dont have this key"
