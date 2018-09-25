@@ -62,15 +62,15 @@ case $i in
     -u|--upgrade)
         #!/bin/bash
         if [ -d /etc/datadog-agent ] 
-        then
+            then
 	        VERSION=$(datadog-agent version | awk '{print $2}')
             LATEST_VERSION=$(cat version)
-            if version_gt $LATEST_VERSION $VERSION; then
-                DD_UPGRADE=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+                if version_gt $LATEST_VERSION $VERSION; then
+                    DD_UPGRADE=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+                else
+                    echo "Agent have latest version"
+                 fi
             else
-                echo "Agent have latest version"
-            fi
-        else
 	        echo "dont have a agent please use key -a=[Enter you api key here] to install agent"
         fi
 
