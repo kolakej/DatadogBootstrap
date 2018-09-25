@@ -76,8 +76,9 @@ case $i in
 
     ;;
     -l) 
-        echo "Integration list include:"
+        echo "List if integration app:"
         ls -1 $WORK_DIR/integration
+        echo "For integration use key --integration=[Enter integration app here]"
     ;;
     *)
         echo "Dont have this key"
